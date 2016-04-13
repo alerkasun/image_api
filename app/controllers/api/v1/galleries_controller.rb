@@ -1,5 +1,6 @@
-class GalleriesController < ApplicationController
+class Api::V1::GalleriesController < ApplicationController
   before_action :set_gallery, only: [:show, :edit, :update, :destroy]
+  respond_to :json
 
   # GET /galleries
   # GET /galleries.json
@@ -68,6 +69,25 @@ class GalleriesController < ApplicationController
       format.html { redirect_to galleries_url }
       format.json { head :no_content }
     end
+  end
+
+  def resize_image
+    current_user.gallery = Gallery.new() unless current_user.try(:gallery)
+    image = Image.new(file: params[:file][:image])
+    current_user.gallery.images << image
+    byebug
+    current_user.gallery.save!
+
+    render json: {
+      # file: params[]
+      # width: params[:size][:width], 
+      # height: params[:size][:height]
+      # file: file_params.original_filename
+    }
+
+    # image = MiniMagick::Image.open("/public/test/1.jpg")
+    #   image.resize size
+    #   image.write( dir_save )
   end
 
   private

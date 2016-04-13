@@ -1,5 +1,7 @@
 class User
   include Mongoid::Document
+  # embeds_one :gallery
+  has_one :gallery 
   # Include default devise modules. Others available are:
   # :confirmable, :lockable, :timeoutable and :omniauthable
   devise :database_authenticatable, :registerable,
