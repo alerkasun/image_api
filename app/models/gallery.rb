@@ -7,4 +7,11 @@ class Gallery
   field :format, :type => String
   field :size, :type => String
   validates_presence_of :name
+
+
+  def resize
+      @image = MiniMagick::Image.open( dir_read )
+      image.resize size
+      image.write( dir_save )
+  end
 end

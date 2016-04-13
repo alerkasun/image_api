@@ -8,10 +8,4 @@ class Image
 
   embedded_in :user
   embeds_many :resized_images
-
-  IMAGE_SIZES = {
-    :big => [1280, 1280],
-    :mini => [300,900],
-    :thumb => [100, 300]
-  }
 end
