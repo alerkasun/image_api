@@ -24,5 +24,4 @@ class Api::BaseController < ActionController::Base
     return false unless error.message =~ /^(.+)?\^\^\^(.+)$/
     {status: $1.to_i, error: $2}
   end
-
 end
