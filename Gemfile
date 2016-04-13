@@ -18,10 +18,9 @@ gem 'compass-rails', '~> 2.0.2'
 gem 'carrierwave'
 gem 'carrierwave-base64'
 gem 'active_model_serializers'
-#gem 'mini_magick'
+gem 'mini_magick'
 gem 'fog'
-gem 'rmagick'
-gem 'mongoid-grid_fs', github: 'ahoward/mongoid-grid_fs'
+gem 'carrierwave-mongoid', :require => 'carrierwave/mongoid'
 
 group :development, :test do
   gem 'byebug'

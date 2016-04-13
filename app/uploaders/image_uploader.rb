@@ -1,7 +1,7 @@
 # encoding: utf-8
 class ImageUploader < CarrierWave::Uploader::Base
 
- include CarrierWave::RMagick
+ include CarrierWave::MiniMagick
 
   def cache_dir
     "#{Rails.root}/tmp/uploads"
