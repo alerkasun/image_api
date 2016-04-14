@@ -1,4 +1,4 @@
-class Api::V1::GalleriesController < ApplicationController
+class Api::V1::GalleriesController < Api::BaseController
   before_action :set_gallery, only: [:show, :edit, :update, :destroy]
   respond_to :json
 
@@ -73,21 +73,15 @@ class Api::V1::GalleriesController < ApplicationController
 
   def resize_image
     current_user.gallery = Gallery.new() unless current_user.try(:gallery)
-    image = Image.new(file: params[:file][:image])
+    image = Image.new(file: params[:gallery][:file])
     current_user.gallery.images << image
-    byebug
     current_user.gallery.save!
 
-    render json: {
-      # file: params[]
-      # width: params[:size][:width], 
-      # height: params[:size][:height]
-      # file: file_params.original_filename
-    }
+    image = MiniMagick::Image.open("#{Rails.root}/public/#{image.file}")
+    image.resize params[:gallery][:size]
+    image.write( "#{Rails.root}/resized_images/#{params[:gallery][:file].original_filename}" )
 
-    # image = MiniMagick::Image.open("/public/test/1.jpg")
-    #   image.resize size
-    #   image.write( dir_save )
+    render json: {}
   end
 
   private
@@ -98,6 +92,6 @@ class Api::V1::GalleriesController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def gallery_params
-      params.require(:gallery).permit(:name)
+      params.require(:gallery).permit(:file,)
     end
 end

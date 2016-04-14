@@ -1,6 +1,26 @@
-== README
+# Usage RAILS::API
 
-session[email]
-session[password]
-example:
-http://localhost:3000/api/sessions?session[email]=a@a.a&session[password]=12345678
+# Autorization
+- login route: POST www.domain.com/api/sessions
+
+ api/sessions/login?param&param…
+Format Request:
+```sh
+session[email]=email@gmail.com
+session[password]=12345678
+```
+ - format response: JSON and HTTP Headers
+```sh
+-[HTTP_API_TOKEN] = 'Token iF9zRYsyDkihsAib_39H'
+```
+
+# Resize Image
+ - route index: GET www.domain.com/api/resize
+ - format request: api/resize
+```sh
+-[HTTP_API_TOKEN] = 'Token iF9zRYsyDkihsAib_39H'
+```
+```sh
+gallery[file]=file.jpg/png/gif/jpeg
+gallery[size]='widthxheight'
+```

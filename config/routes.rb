@@ -10,13 +10,18 @@ YalanticImageApi::Application.routes.draw do
 
     
     scope module: :v1, constraints: ApiConstraints.new(version: 1, default: true) do
-      resources :users, :only => [:show, :create, :destroy]
+      # resources :users, :only => [:show, :create, :destroy]
       resources :sessions, :only => [:create, :destroy]
       controller :galleries do
         post 'resize' => :resize_image
       end
-      # resources :galleries
+      
+      controller :users do
+        post    'users/create'  => :create
+        patch   'users/update'  => :update
+        delete  'users/delete' => :delete
+      end
+
     end
   end
 end
-

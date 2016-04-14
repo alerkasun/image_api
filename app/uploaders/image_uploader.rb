@@ -4,7 +4,7 @@ class ImageUploader < CarrierWave::Uploader::Base
  include CarrierWave::MiniMagick
 
   def cache_dir
-    "#{Rails.root}/tmp/uploads"
+    "#{Rails.root}/uploads/temp/"
   end
 
   process :resize_to_fit => [600, 600]

@@ -1,4 +1,6 @@
-class Api::V1::SessionsController < ApplicationController
+class Api::V1::SessionsController < Api::BaseController
+
+  skip_before_action :verify_access?, only: [:create]
 
   def create
     user_password = params[:session][:password]
