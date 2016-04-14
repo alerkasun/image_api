@@ -11,7 +11,7 @@ class Api::V1::SessionsController < Api::BaseController
       sign_in user, store: false
       user.send :generate_authentication_token
       user.update
-      render json: user, status: 200, location: [:api, user]
+      render json: user, status: 200
     else
       render json: { errors: "Invalid email or password" }, status: 422
     end

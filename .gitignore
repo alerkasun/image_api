@@ -6,6 +6,8 @@
 
 # Ignore bundler config.
 /.bundle
+public/uploads/
+resized_images/
 
 # Ignore the default SQLite database.
 /db/*.sqlite3
