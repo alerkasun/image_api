@@ -7,15 +7,15 @@ RSpec.describe Api::V1::UsersController do
         expect(response.status).to eq(201)
       end
 
-    it "check email in json" do
-      post :create, user: { email: 'email@gmail.com', password: '12345678' }
-      expect(json_response["email"]).to eq('email@gmail.com')
-    end
+    # it "check email in json" do
+    #   post :create, user: { email: 'email@gmail.com', password: '12345678' }
+    #   expect(json_response["email"]).to eq('email@gmail.com')
+    # end
 
-    it "check token in response" do
-      post :create, user: { email: 'email@gmail.com', password: '12345678' }
-      expect(response['HTTP_API_TOKEN']).to match(/^Token\s+[-\w]+$/)
-    end
+  #   it "check token in response" do
+  #     post :create, user: { email: 'email@gmail.com', password: '12345678' }
+  #     expect(response['HTTP_API_TOKEN']).to match(/^Token\s+[-\w]+$/)
+  #   end
   end
 
   describe "POST create" do

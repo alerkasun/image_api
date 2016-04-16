@@ -1,8 +1,6 @@
 class Image
   include Mongoid::Document
   mount_uploader :file, ImageUploader
-  # embedded_in :gallery
-  belongs_to :gallery
-
+  belongs_to :galler
   field :file, type: String
 end

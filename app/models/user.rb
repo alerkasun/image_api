@@ -41,8 +41,6 @@ class User
 
   before_create :generate_authentication_token
 
-  #before_save :generate_authentication_token
-
   private
   def generate_authentication_token
     loop do
