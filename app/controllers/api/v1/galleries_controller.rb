@@ -89,18 +89,21 @@ class Api::V1::GalleriesController < Api::BaseController
     render json: @images
   end
 
-  def resize_new_image
-    byebug
-    image = MiniMagick::Image.open("#{Rails.root}/public/11245.jpg")
+  def resize_old_image
+  new_file = params[:gallery][:image_name]
+  directory = Rails.root.join( 'resized_images', current_user.email)
+  all_files = Dir.entries(directory)
+  if all_files.include? new_file
+    image = MiniMagick::Image.open("#{directory}/#{new_file}")
     image.resize params[:gallery][:size]
-
-
-   directory = Rails.root.join( 'resized_images', current_user.email)
     FileUtils::mkdir_p( directory ) unless Dir.exists?( directory )
-    image.write( "#{directory}/rate.png")
 
-    render :status => 200,  :json => {:status=>"Success",:message=>"Your new Image was successfully uploaded with #{params[:gallery][:size]}"}
+    image.write("#{directory}/#{new_file}")
+    render :status => 200,  :json => {:status=>"Success",:message=>"Your old Image was successfully uploaded with #{params[:gallery][:size]}"}
+  else 
+    render :status => 422,  :json => {:status=>"errors",:message=>"No file"}
   end
+end
 
   private
     def set_gallery

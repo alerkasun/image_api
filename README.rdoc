@@ -1,26 +1,138 @@
+
 # Usage RAILS::API
+### USER:
+#### Create:
+* route create: POST www.domain.com/api/users/create
 
-# Autorization
-- login route: POST www.domain.com/api/sessions
+* format request: api/users/create?param&param…
+```
+user[email] = test@test.test
+user[password] = 1q2w3e4r5t6y7u
+user[password_confirmation] = 1q2w3e4r5t6y7u
+```
+#### Update
+* route update: PATCH www.domain.com/api/users/update
 
- api/sessions/login?param&param…
-Format Request:
-```sh
-session[email]=email@gmail.com
-session[password]=12345678
+* format request: api/users/update?param&param…
 ```
- - format response: JSON and HTTP Headers
-```sh
--[HTTP_API_TOKEN] = 'Token iF9zRYsyDkihsAib_39H'
+user[email] = test@test.test
+user[password] = 123qwe123qwe
+[HTTP_API_TOKEN] = 'Token xxxxxxxxxxxxxxx'
+```
+#### Delete
+* route delete: DELETE www.domain.com/api/users/create
+
+* format request: api/users/delete
+```
+[HTTP_API_TOKEN] = 'Token xxxxxxxxxxxxxxx'
+```
+#### Autorization
+
+* login route: POST www.domain.com/api/sessions
+
+* format request: api/sessions/param&param…
+```
+session[email] = test@test.test
+session[password] = 123qwe123qwe
+```
+After Autorization you get unique api_token:
+```
+{
+    "_id": {
+        "$oid": "5713b48c8f1ddad88a53c4d7"
+    },
+    "auth_token": "MtH_mwVKTyvoxJLFWaEW",
+    "email": "test@test.test"
+}
+```
+You will need auth_token for upload and resize images
+
+#### Unauthorization
+* login route: POST www.domain.com/api/sessions
+
+* format request: api/sessions/param&param…
+```
+session[email] = test@test.test
+session[password] = 123qwe123qwe
+```
+#### List of all images belongs to current user:
+
+* route index GET www.domain.com/api/show_all_images
+* format request: /api/show_all_images
+* with HEADERS:
+```
+[API_TOKEN] = 'Token MtH_mwVKTyvoxJLFWaEW'
+```
+* Response example: 
+```
+{
+    "galleries": [
+        {
+            "_id": {
+                "$oid": "5713d1018f1ddae10d3bc076"
+            },
+            "file": {
+                "url": "/uploads/123123.png"
+            },
+            "format": null,
+            "gallery_id": {
+                "$oid": "5713d0e08f1ddae10d3bc075"
+            },
+            "heigth": null,
+            "width": null
+        }
+    ]
+}
+```
+#### Resize new image
+* route index GET www.domain.com/api/resize
+* format request: api/resize
+* with HEADERS:
+```
+[API_TOKEN] = 'Token MtH_mwVKTyvoxJLFWaEW'
+```
+* params:
+```
+gallery[size] = '123x234'
+gallery[file] = file.png/jpeg/jpg
+
 ```
 
-# Resize Image
- - route index: GET www.domain.com/api/resize
- - format request: api/resize
-```sh
--[HTTP_API_TOKEN] = 'Token iF9zRYsyDkihsAib_39H'
+* response example:
 ```
-```sh
-gallery[file]=file.jpg/png/gif/jpeg
-gallery[size]='widthxheight'
+{
+    "status": "Success",
+    "message": "Your new Image was successfully uploaded with 123x234"
+}
+```
+#### Resize old image
+For this operation you need to have at list one image you want to resize
+
+* route index GET www.domain.com/api/resize_old
+* format request: api/resize_old
+* with HEADERS:
+```
+[API_TOKEN] = 'Token MtH_mwVKTyvoxJLFWaEW'
+```
+
+
+* params:
+
+```
+gallery[size] = '123x234'
+gallery[image_name] = file.png
+```
+If image exists, it should be resized: 
+```
+{
+    "status": "Success",
+    "message": "Your old Image was successfully uploaded with 123x345"
+}
+```
+If no image:
+```
+{
+    "status": "errors",
+    "message": "No file"
+}
 ```
