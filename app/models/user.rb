@@ -1,6 +1,7 @@
 class User
   include Mongoid::Document
-  # embeds_one :gallery
+  validates :email, presence: true
+
   has_one :gallery 
   # Include default devise modules. Others available are:
   # :confirmable, :lockable, :timeoutable and :omniauthable
@@ -24,6 +25,7 @@ class User
   field :last_sign_in_at,    type: Time
   field :current_sign_in_ip, type: String
   field :last_sign_in_ip,    type: String
+  field :auth_token, type: String, default: ""
 
   ## Confirmable
   # field :confirmation_token,   type: String
@@ -36,16 +38,17 @@ class User
   # field :unlock_token,    type: String # Only if unlock strategy is :email or :both
   # field :locked_at,       type: Time
 
-  field :api_token, type: String, default: ""
-
-
   before_create :generate_authentication_token
+  before_validation :downcase_email
 
-  private
   def generate_authentication_token
     loop do
-      self.api_token = Devise.friendly_token
-      User.where(api_token: self.api_token).first == nil ? break : next
+      self.auth_token = Devise.friendly_token
+      User.where(auth_token: self.auth_token).first == nil ? break : next
     end
+  end
+
+  def downcase_email
+    self.email = self.email.downcase if self.email.present?
   end
 end

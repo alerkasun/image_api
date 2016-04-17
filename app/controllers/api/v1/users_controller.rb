@@ -23,9 +23,14 @@ class Api::V1::UsersController < Api::BaseController
     end
   end
 
-  def destroy
-    current_user.destroy
-    head 204
+  def delete
+    if user_params[:email].present?
+      user = User.find_by(email: user_params[:email])
+    else
+      render :status => 200,  :json => {:status=>"Errors",:message=>"We didn't recognize the user email or api token you entered. Please try again."}
+    end
+    user.destroy!
+    render :status => 204,  :json => {:status=>"Success",:message=>"User was successfully deleted"}
   end
 
   private
@@ -34,3 +39,8 @@ class Api::V1::UsersController < Api::BaseController
     params.require(:user).permit(:email, :password, :password_confirmation)
   end
 end
+
+
+
+
+  

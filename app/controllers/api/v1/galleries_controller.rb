@@ -76,22 +76,38 @@ class Api::V1::GalleriesController < Api::BaseController
     image = Image.new(file: params[:gallery][:file])
     current_user.gallery.images << image
     current_user.gallery.save!
-
     image = MiniMagick::Image.open("#{Rails.root}/public/#{image.file}")
     image.resize params[:gallery][:size]
-    image.write( "#{Rails.root}/resized_images/#{params[:gallery][:file].original_filename}" )
+    directory = Rails.root.join( 'resized_images', current_user.email)
+    FileUtils::mkdir_p( directory ) unless Dir.exists?( directory )
+    image.write( "#{directory}/#{params[:gallery][:file].original_filename}")
+    render :status => 200,  :json => {:status=>"Success",:message=>"Your new Image was successfully uploaded with #{params[:gallery][:size]}"}
+  end
 
-    render json: {}
+  def show_all_images
+    @images = current_user.gallery.images
+    render json: @images
+  end
+
+  def resize_new_image
+    byebug
+    image = MiniMagick::Image.open("#{Rails.root}/public/11245.jpg")
+    image.resize params[:gallery][:size]
+
+
+   directory = Rails.root.join( 'resized_images', current_user.email)
+    FileUtils::mkdir_p( directory ) unless Dir.exists?( directory )
+    image.write( "#{directory}/rate.png")
+
+    render :status => 200,  :json => {:status=>"Success",:message=>"Your new Image was successfully uploaded with #{params[:gallery][:size]}"}
   end
 
   private
-    # Use callbacks to share common setup or constraints between actions.
     def set_gallery
       @gallery = Gallery.find(params[:id])
     end
 
-    # Never trust parameters from the scary internet, only allow the white list through.
     def gallery_params
-      params.require(:gallery).permit(:file,)
+      params.require(:gallery).permit(:file)
     end
 end

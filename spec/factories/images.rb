@@ -1,5 +1,5 @@
 FactoryGirl.define do
-  factory :resized_image do
+  factory :image do
     orig_name "test.JPG"
     id '1'
     file_name "1.JPG"

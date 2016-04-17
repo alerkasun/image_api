@@ -14,6 +14,8 @@ YalanticImageApi::Application.routes.draw do
       resources :sessions, :only => [:create, :destroy]
       controller :galleries do
         post 'resize' => :resize_image
+        post 'resizenew' => :resize_new_image
+        get  'show_all_images' => :show_all_images
       end
       
       controller :users do
