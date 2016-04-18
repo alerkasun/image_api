@@ -73,15 +73,25 @@ class Api::V1::GalleriesController < Api::BaseController
 
   def resize_image
     current_user.gallery = Gallery.new() unless current_user.try(:gallery)
+
     image = Image.new(file: params[:gallery][:file])
     current_user.gallery.images << image
     current_user.gallery.save!
-    image = MiniMagick::Image.open("#{Rails.root}/public/#{image.file}")
-    image.resize params[:gallery][:size]
-    directory = Rails.root.join( 'resized_images', current_user.email)
-    FileUtils::mkdir_p( directory ) unless Dir.exists?( directory )
-    image.write( "#{directory}/#{params[:gallery][:file].original_filename}")
-    render :status => 200,  :json => {:status=>"Success",:message=>"Your new Image was successfully uploaded with #{params[:gallery][:size]}"}
+
+    resized_image = MiniMagick::Image.open("#{Rails.root}/public/#{image.file}")
+    resized_image.resize(params[:gallery][:size])
+    directory = Rails.root.join('resized_images', current_user.email)
+    FileUtils::mkdir_p(directory) unless Dir.exists?(directory)
+    resized_image.write("#{directory}/#{params[:gallery][:file].original_filename}")
+    image.file.store!(resized_image) 
+
+    render :status => 200,  :json => {
+      :status=>"Success",
+      :message=>"Your new Image was successfully uploaded with #{params[:gallery][:size]}", 
+      url: image.file.url,
+      width: resized_image.width,
+      height: resized_image.height
+    }
   end
 
   def show_all_images
@@ -99,7 +109,13 @@ class Api::V1::GalleriesController < Api::BaseController
     FileUtils::mkdir_p( directory ) unless Dir.exists?( directory )
 
     image.write("#{directory}/#{new_file}")
-    render :status => 200,  :json => {:status=>"Success",:message=>"Your old Image was successfully uploaded with #{params[:gallery][:size]}"}
+    render :status => 200,  :json => {
+      :status=>"Success",
+      :message=>"Your old Image was successfully uploaded with #{params[:gallery][:size]}",
+      :url=> image.file.url,
+      :width=> resized_image.width,
+      :height=> resized_image.height
+    }
   else 
     render :status => 422,  :json => {:status=>"errors",:message=>"No file"}
   end
