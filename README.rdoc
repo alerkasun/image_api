@@ -102,7 +102,10 @@ gallery[file] = file.png/jpeg/jpg
 ```
 {
     "status": "Success",
-    "message": "Your new Image was successfully uploaded with 123x234"
+    "message": "Your new Image was successfully uploaded with 123x235",
+    "url": "/uploads/mini_magick20160418-57613-17uuygi.png",
+    "width": 123,
+    "height": 58
 }
 ```
 #### Resize old image
